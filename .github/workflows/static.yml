@@ -10,10 +10,6 @@ permissions:
   pages: write
   id-token: write
 
-concurrency:
-  group: "pages"
-  cancel-in-progress: false
-
 jobs:
   deploy:
     environment:
@@ -27,11 +23,10 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      # This step packages your files into the required "github-pages" artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'  # Uploads the root directory (where your index.html is)
+          path: '.'
 
       - name: Deploy to GitHub Pages
         id: deployment
