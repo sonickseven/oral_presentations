@@ -907,6 +907,214 @@
         min-height: 340px;
       }
     }
+
+    /* ---------- Slide 4: Milky Way crossing animation ---------- */
+    .slide.galaxy-slide {
+      overflow: hidden;
+      padding-bottom: 78px;
+    }
+
+    .galaxy-slide h2 {
+      font-size: clamp(1.7rem, 3vw, 2.7rem);
+      margin: 10px 0 6px;
+    }
+
+    .galaxy-slide>p {
+      margin: 0 0 14px;
+      font-size: clamp(.95rem, 1.3vw, 1.15rem);
+    }
+
+    .galaxy-stage {
+      position: relative;
+      flex: 1 1 auto;
+      min-height: 300px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(140, 190, 255, .22);
+      background: #020304;
+      box-shadow: 0 28px 90px rgba(2, 8, 20, .75), inset 0 0 80px rgba(110, 170, 255, .04);
+    }
+
+    /* ===== Scoped Milky Way animation styles (no global resets) ===== */
+    #galaxy-presentation-slide,
+    #galaxy-presentation-slide * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    #galaxy-presentation-slide {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      color: #eef5ff;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: #030405;
+      user-select: none;
+    }
+
+    #galaxy-presentation-slide #mw-galaxy-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      background: radial-gradient(ellipse at 50% 50%, #121724 0%, #030405 100%);
+    }
+
+    #galaxy-presentation-slide .mw-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 1.25rem 1rem 1.75rem;
+    }
+
+    #galaxy-presentation-slide .mw-subtitle-box {
+      background: rgba(0, 0, 0, .65);
+      backdrop-filter: blur(8px);
+      padding: .65rem 1.4rem;
+      border-radius: 60px;
+      border: 1px solid rgba(210, 230, 255, .25);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, .6);
+      width: fit-content;
+      text-align: center;
+    }
+
+    #galaxy-presentation-slide .mw-time-label {
+      color: #eef5ff;
+      font-size: clamp(.9rem, 1.5vw, 1.3rem);
+      font-weight: 400;
+      letter-spacing: .03em;
+      text-shadow: 0 2px 12px rgba(160, 210, 255, .7);
+      font-family: 'Segoe UI', 'Inter', monospace;
+      display: flex;
+      align-items: center;
+      gap: .55rem;
+      justify-content: center;
+    }
+
+    #galaxy-presentation-slide .mw-prefix {
+      color: #b0caf0;
+      font-weight: 300;
+      font-size: .85em;
+    }
+
+    #galaxy-presentation-slide .mw-time-value {
+      font-weight: 600;
+      background: linear-gradient(135deg, #e2eeff, #b3d0ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-variant-numeric: tabular-nums;
+      min-width: 6ch;
+      display: inline-block;
+      text-align: left;
+    }
+
+    #galaxy-presentation-slide .mw-unit {
+      color: #9db9e0;
+      font-weight: 300;
+      font-size: .85em;
+    }
+
+    #galaxy-presentation-slide .mw-caption {
+      margin-top: 6px;
+      font-size: .75rem;
+      color: #93a9c9;
+      opacity: .85;
+      letter-spacing: .4px;
+    }
+
+    #galaxy-presentation-slide .mw-credit {
+      position: absolute;
+      top: 16px;
+      right: 20px;
+      color: #4b5c74;
+      font-size: .65rem;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      opacity: .7;
+    }
+
+    #galaxy-presentation-slide .mw-control-btn {
+      position: absolute;
+      top: 16px;
+      left: 18px;
+      z-index: 20;
+      pointer-events: auto;
+      background: rgba(20, 30, 50, .75);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(140, 190, 255, .35);
+      border-radius: 40px;
+      color: #eaf1ff;
+      font-family: 'Segoe UI', 'Inter', monospace;
+      font-size: .82rem;
+      font-weight: 500;
+      letter-spacing: .08em;
+      padding: .5rem 1.15rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all .2s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, .5);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, .5);
+    }
+
+    #galaxy-presentation-slide .mw-control-btn:hover {
+      background: rgba(40, 65, 110, .9);
+      border-color: rgba(180, 220, 255, .7);
+      box-shadow: 0 0 20px rgba(110, 170, 255, .35);
+      transform: scale(1.02);
+    }
+
+    #galaxy-presentation-slide .mw-control-btn:active {
+      transform: scale(.98);
+    }
+
+    #galaxy-presentation-slide .mw-control-btn .mw-icon {
+      font-size: 1rem;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.2rem;
+    }
+
+    @media (max-width: 760px) {
+      .galaxy-stage {
+        min-height: 260px;
+      }
+
+      #galaxy-presentation-slide .mw-control-btn {
+        top: 10px;
+        left: 10px;
+        font-size: .72rem;
+        padding: .4rem .9rem;
+      }
+
+      #galaxy-presentation-slide .mw-credit {
+        top: 12px;
+        right: 12px;
+        font-size: .55rem;
+      }
+
+      #galaxy-presentation-slide .mw-overlay {
+        padding-bottom: 1.1rem;
+      }
+
+      #galaxy-presentation-slide .mw-subtitle-box {
+        padding: .5rem 1rem;
+      }
+
+      #galaxy-presentation-slide .mw-caption {
+        font-size: .62rem;
+      }
+    }
   </style>
 </head>
 
@@ -1049,8 +1257,38 @@
         stars.</p>
     </section>
 
+    <section class="slide galaxy-slide">
+      <div class="eyebrow">04 / Across the galaxy</div>
+      <h2>The Milky Way is 100,000 light-years wide.</h2>
+      <p>Even at light speed, crossing our galaxy takes 100,000 years. Watch the light make the journey.</p>
+
+      <div class="galaxy-stage">
+        <div id="galaxy-presentation-slide">
+          <canvas id="mw-galaxy-canvas" width="1600" height="900"
+            aria-label="Animation of light crossing the Milky Way"></canvas>
+
+          <button type="button" id="mw-toggle-btn" class="mw-control-btn" aria-label="Toggle animation">
+            <span class="mw-icon" id="mw-btn-icon">&#9654;</span>
+            <span id="mw-btn-text">Start</span>
+          </button>
+
+          <div class="mw-overlay">
+            <div class="mw-subtitle-box">
+              <div class="mw-time-label">
+                <span class="mw-prefix">Elapsed</span>
+                <span class="mw-time-value" id="mw-time-display">0.0</span>
+                <span class="mw-unit" id="mw-unit-display">years</span>
+              </div>
+              <div class="mw-caption">light crossing the Milky Way (100,000 light-years)</div>
+            </div>
+          </div>
+          <div class="mw-credit">Milky Way &middot; 100,000 light-years</div>
+        </div>
+      </div>
+    </section>
+
     <section class="slide">
-      <div class="eyebrow">04 / Looking into the past</div>
+      <div class="eyebrow">05 / Looking into the past</div>
       <h2>When we look at stars, we look back in time.</h2>
       <p>Light needs time to cross space. We see distant stars as they were when their light began its journey — not
         necessarily as they are right now.</p>
@@ -1064,7 +1302,7 @@
     </section>
 
     <section class="slide">
-      <div class="eyebrow">05 / The final limit</div>
+      <div class="eyebrow">06 / The final limit</div>
       <h2>The closer you get, the harder it gets.</h2>
       <div class="grid">
         <div class="card">
@@ -1105,7 +1343,7 @@
     <button class="secondary" id="prev" aria-label="Previous slide">← Back</button>
     <button id="next" aria-label="Next slide">Next →</button>
     <div class="progress"><span id="progressBar"></span></div>
-    <span class="counter" id="counter">1 / 7</span>
+    <span class="counter" id="counter">1 / 8</span>
     <span class="hint">← → navigate · F fullscreen · Esc exit</span>
   </div>
 
@@ -1208,6 +1446,318 @@
 
       // Initial state: the fullscreen prompt is deliberately shown on page load.
       showSlide(0);
+    })();
+  </script>
+
+  <script>
+    (function () {
+      const container = document.getElementById('galaxy-presentation-slide');
+      if (!container) return;
+
+      const canvas = document.getElementById('mw-galaxy-canvas');
+      const ctx = canvas.getContext('2d');
+      const toggleBtn = document.getElementById('mw-toggle-btn');
+      const btnIcon = document.getElementById('mw-btn-icon');
+      const btnText = document.getElementById('mw-btn-text');
+      const timeDisplay = document.getElementById('mw-time-display');
+
+      const CANVAS_W = 1600;
+      const CANVAS_H = 900;
+
+      const GALAXY_CENTER_X = CANVAS_W * 0.5;
+      const GALAXY_CENTER_Y = CANVAS_H * 0.5;
+      const GALAXY_RADIUS = 400;
+      const GALAXY_VERTICAL_SCALE = 0.42;
+
+      const LIGHT_TRAVEL_TIME = 12;
+      const LIGHT_START_X = GALAXY_CENTER_X - GALAXY_RADIUS;
+      const LIGHT_END_X = GALAXY_CENTER_X + GALAXY_RADIUS;
+      const LIGHT_Y = GALAXY_CENTER_Y;
+      const MILKY_WAY_DIAMETER_LY = 100000;
+
+      let animationFrame = null;
+      let isRunning = false;
+      let startTime = null;
+      let pausedProgress = 0;
+
+      const stars = [];
+      const STAR_COUNT = 1800;
+      for (let i = 0; i < STAR_COUNT; i++) {
+        stars.push({
+          x: Math.random() * CANVAS_W,
+          y: Math.random() * CANVAS_H,
+          radius: Math.random() * 1.5 + 0.3,
+          brightness: Math.random() * 0.7 + 0.3,
+          twinkleSpeed: Math.random() * 0.02 + 0.005,
+          phase: Math.random() * Math.PI * 2,
+        });
+      }
+
+      const clusterStars = [];
+      const CLUSTER_COUNT = 1400;
+      for (let i = 0; i < CLUSTER_COUNT; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const dist = Math.pow(Math.random(), 1.8) * GALAXY_RADIUS * 1.1;
+        const x = GALAXY_CENTER_X + Math.cos(angle) * dist;
+        const y = GALAXY_CENTER_Y + Math.sin(angle) * dist * GALAXY_VERTICAL_SCALE;
+        if (x > 0 && x < CANVAS_W && y > 0 && y < CANVAS_H) {
+          clusterStars.push({
+            x, y,
+            radius: Math.random() * 1.8 + 0.5,
+            brightness: Math.random() * 0.6 + 0.3,
+            color: `hsl(${40 + Math.random() * 30}, 70%, ${65 + Math.random() * 25}%)`,
+          });
+        }
+      }
+
+      function isVisible() {
+        const rect = container.getBoundingClientRect();
+        return rect.width > 2 && rect.height > 2;
+      }
+
+      function drawGalaxy() {
+        ctx.save();
+        ctx.translate(GALAXY_CENTER_X, GALAXY_CENTER_Y);
+        ctx.scale(1, GALAXY_VERTICAL_SCALE * 0.9);
+
+        const coreGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, GALAXY_RADIUS * 1.2);
+        coreGrad.addColorStop(0, 'rgba(255, 245, 210, 0.45)');
+        coreGrad.addColorStop(0.2, 'rgba(220, 200, 170, 0.25)');
+        coreGrad.addColorStop(0.5, 'rgba(150, 160, 200, 0.15)');
+        coreGrad.addColorStop(0.8, 'rgba(90, 110, 160, 0.08)');
+        coreGrad.addColorStop(1, 'rgba(40, 50, 80, 0)');
+
+        ctx.beginPath();
+        ctx.arc(0, 0, GALAXY_RADIUS * 1.2, 0, Math.PI * 2);
+        ctx.fillStyle = coreGrad;
+        ctx.fill();
+
+        const innerGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, GALAXY_RADIUS * 0.3);
+        innerGrad.addColorStop(0, 'rgba(255, 250, 235, 0.9)');
+        innerGrad.addColorStop(0.5, 'rgba(240, 220, 180, 0.5)');
+        innerGrad.addColorStop(1, 'rgba(180, 170, 150, 0)');
+        ctx.beginPath();
+        ctx.arc(0, 0, GALAXY_RADIUS * 0.3, 0, Math.PI * 2);
+        ctx.fillStyle = innerGrad;
+        ctx.fill();
+
+        ctx.restore();
+
+        for (const s of clusterStars) {
+          ctx.fillStyle = s.color;
+          ctx.shadowColor = s.color;
+          ctx.shadowBlur = s.radius * 3;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+
+        ctx.save();
+        ctx.translate(GALAXY_CENTER_X, GALAXY_CENTER_Y);
+        ctx.scale(1, GALAXY_VERTICAL_SCALE);
+        ctx.shadowBlur = 0;
+        ctx.shadowColor = 'transparent';
+
+        for (let i = 0; i < 6; i++) {
+          const angle = i * 1.2;
+          ctx.beginPath();
+          ctx.ellipse(Math.cos(angle) * 140, Math.sin(angle) * 140, 180, 80, angle, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(10, 15, 30, 0.12)';
+          ctx.fill();
+        }
+
+        for (let i = 0; i < 4; i++) {
+          const angle = i * 1.8 + 0.5;
+          ctx.beginPath();
+          ctx.ellipse(Math.cos(angle) * 220, Math.sin(angle) * 120, 240, 90, angle * 0.8, 0, Math.PI * 2);
+          ctx.fillStyle = 'rgba(8, 12, 25, 0.1)';
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+
+      function drawLight(progress) {
+        const x = LIGHT_START_X + (LIGHT_END_X - LIGHT_START_X) * progress;
+        const trailLength = Math.min(progress * (LIGHT_END_X - LIGHT_START_X), 260);
+        const trailStartX = Math.max(LIGHT_START_X, x - trailLength);
+
+        const trailGrad = ctx.createLinearGradient(trailStartX, LIGHT_Y, x, LIGHT_Y);
+        trailGrad.addColorStop(0, 'rgba(180, 230, 255, 0)');
+        trailGrad.addColorStop(0.7, 'rgba(200, 240, 255, 0.35)');
+        trailGrad.addColorStop(1, 'rgba(255, 255, 255, 0.9)');
+
+        ctx.save();
+        ctx.shadowBlur = 28;
+        ctx.shadowColor = 'rgba(150, 210, 255, 0.9)';
+        ctx.beginPath();
+        ctx.moveTo(trailStartX, LIGHT_Y);
+        ctx.lineTo(x, LIGHT_Y);
+        ctx.strokeStyle = trailGrad;
+        ctx.lineWidth = 7;
+        ctx.lineCap = 'round';
+        ctx.stroke();
+
+        ctx.shadowBlur = 35;
+        ctx.shadowColor = '#b0e0ff';
+        ctx.beginPath();
+        ctx.arc(x, LIGHT_Y, 9, 0, Math.PI * 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.fill();
+
+        ctx.shadowBlur = 50;
+        ctx.shadowColor = 'rgba(150, 220, 255, 1)';
+        ctx.beginPath();
+        ctx.arc(x, LIGHT_Y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = '#f0f8ff';
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawTwinklingStars(timestamp) {
+        for (const s of stars) {
+          const twinkle = Math.sin(timestamp * s.twinkleSpeed + s.phase) * 0.25 + 0.75;
+          const radius = s.radius * (0.8 + twinkle * 0.4);
+          const brightness = s.brightness * (0.7 + twinkle * 0.3);
+
+          ctx.save();
+          ctx.shadowBlur = radius * 5;
+          ctx.shadowColor = `rgba(200, 225, 255, ${brightness * 0.9})`;
+          ctx.fillStyle = `rgba(255, 255, 255, ${brightness})`;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, radius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+      }
+
+      function updateSubtitle(progress) {
+        const years = progress * MILKY_WAY_DIAMETER_LY;
+        const displayStr = years < 10 ? years.toFixed(1) : Math.round(years).toLocaleString('en-US');
+        timeDisplay.textContent = displayStr;
+      }
+
+      function render(timestamp, progress) {
+        const bgGrad = ctx.createRadialGradient(
+          GALAXY_CENTER_X, GALAXY_CENTER_Y, 50,
+          GALAXY_CENTER_X, GALAXY_CENTER_Y, CANVAS_W * 0.8
+        );
+        bgGrad.addColorStop(0, '#121b2b');
+        bgGrad.addColorStop(0.5, '#0a0e17');
+        bgGrad.addColorStop(1, '#020304');
+        ctx.fillStyle = bgGrad;
+        ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+
+        drawGalaxy();
+        drawTwinklingStars(timestamp);
+        drawLight(progress);
+
+        ctx.save();
+        ctx.shadowBlur = 0;
+        ctx.beginPath();
+        ctx.moveTo(LIGHT_START_X, LIGHT_Y);
+        ctx.lineTo(LIGHT_END_X, LIGHT_Y);
+        ctx.strokeStyle = 'rgba(120, 170, 255, 0.15)';
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([12, 20]);
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.save();
+        ctx.font = '14px "Segoe UI", monospace';
+        ctx.fillStyle = 'rgba(180, 210, 255, 0.5)';
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = '#3a6ea5';
+        ctx.fillText('START', LIGHT_START_X - 45, LIGHT_Y - 20);
+        ctx.fillText('END', LIGHT_END_X + 15, LIGHT_Y - 20);
+        ctx.restore();
+
+        updateSubtitle(progress);
+      }
+
+      function animate(timestamp) {
+        if (!isRunning) {
+          animationFrame = null;
+          return;
+        }
+
+        if (!isVisible()) {
+          pauseAnimation();
+          return;
+        }
+
+        if (startTime === null) {
+          startTime = timestamp - pausedProgress * LIGHT_TRAVEL_TIME * 1000;
+        }
+
+        const elapsedSeconds = (timestamp - startTime) / 1000;
+        const progress = (elapsedSeconds % LIGHT_TRAVEL_TIME) / LIGHT_TRAVEL_TIME;
+        pausedProgress = progress;
+
+        render(timestamp, progress);
+        animationFrame = requestAnimationFrame(animate);
+      }
+
+      function updateButtonState(running) {
+        if (running) {
+          btnIcon.textContent = '❚❚';
+          btnText.textContent = 'Pause';
+          toggleBtn.classList.add('running');
+          toggleBtn.setAttribute('aria-label', 'Pause animation');
+        } else {
+          btnIcon.textContent = '▶';
+          btnText.textContent = 'Start';
+          toggleBtn.classList.remove('running');
+          toggleBtn.setAttribute('aria-label', 'Start animation');
+        }
+      }
+
+      function startAnimation() {
+        if (isRunning) return;
+        isRunning = true;
+        startTime = null;
+        updateButtonState(true);
+        if (animationFrame) cancelAnimationFrame(animationFrame);
+        animationFrame = requestAnimationFrame(animate);
+      }
+
+      function pauseAnimation() {
+        if (!isRunning) return;
+        isRunning = false;
+        if (animationFrame) {
+          cancelAnimationFrame(animationFrame);
+          animationFrame = null;
+        }
+        updateButtonState(false);
+      }
+
+      function toggleAnimation() {
+        if (isRunning) pauseAnimation();
+        else startAnimation();
+      }
+
+      function renderStatic() {
+        render(performance.now(), 0);
+        updateSubtitle(0);
+        pausedProgress = 0;
+      }
+
+      toggleBtn.addEventListener('click', toggleAnimation);
+
+      const slide = container.closest('.slide');
+      let autoStarted = false;
+      if (slide) {
+        const observer = new MutationObserver(() => {
+          if (!autoStarted && slide.classList.contains('active')) {
+            autoStarted = true;
+            startAnimation();
+          }
+        });
+        observer.observe(slide, { attributes: true, attributeFilter: ['class'] });
+      }
+
+      renderStatic();
+      updateButtonState(false);
     })();
   </script>
 
