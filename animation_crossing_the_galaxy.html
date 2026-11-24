@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Light across the Milky Way</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0a0c10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      overflow: hidden;
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 1000px;
+      max-width: 100vw;
+      aspect-ratio: 16 / 9;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8);
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid #2a2e3a;
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(ellipse at 50% 50%, #121724 0%, #030405 100%);
+    }
+
+    .overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding: 2rem 1rem 2.5rem;
+    }
+
+    .subtitle-box {
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(8px);
+      padding: 0.9rem 2rem;
+      border-radius: 60px;
+      border: 1px solid rgba(210, 230, 255, 0.25);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+      width: fit-content;
+      transition: opacity 0.2s ease;
+      text-align: center;
+    }
+
+    .time-label {
+      color: #eef5ff;
+      font-size: clamp(1.1rem, 2vw, 1.6rem);
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      text-shadow: 0 2px 12px rgba(160, 210, 255, 0.7);
+      font-family: 'Segoe UI', 'Inter', monospace;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      justify-content: center;
+    }
+
+    .time-label .prefix {
+      color: #b0caf0;
+      font-weight: 300;
+      font-size: 0.9em;
+    }
+
+    .time-value {
+      font-weight: 600;
+      background: linear-gradient(135deg, #e2eeff, #b3d0ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-variant-numeric: tabular-nums;
+      min-width: 6ch;
+      display: inline-block;
+      text-align: left;
+    }
+
+    .unit {
+      color: #9db9e0;
+      font-weight: 300;
+      font-size: 0.85em;
+    }
+
+    .caption {
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: #93a9c9;
+      opacity: 0.85;
+      letter-spacing: 0.4px;
+    }
+
+    .credit {
+      position: absolute;
+      top: 20px;
+      right: 25px;
+      color: #4b5c74;
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      opacity: 0.6;
+    }
+
+    /* Control button — positioned at top-left with pointer-events enabled */
+    .control-btn {
+      position: absolute;
+      top: 20px;
+      left: 25px;
+      z-index: 20;
+      pointer-events: auto;
+      background: rgba(20, 30, 50, 0.75);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(140, 190, 255, 0.35);
+      border-radius: 40px;
+      color: #eaf1ff;
+      font-family: 'Segoe UI', 'Inter', monospace;
+      font-size: 0.95rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      padding: 0.6rem 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+    }
+
+    .control-btn:hover {
+      background: rgba(40, 65, 110, 0.9);
+      border-color: rgba(180, 220, 255, 0.7);
+      box-shadow: 0 0 20px rgba(110, 170, 255, 0.35);
+      transform: scale(1.02);
+    }
+
+    .control-btn:active {
+      transform: scale(0.98);
+    }
+
+    .control-btn .icon {
+      font-size: 1.1rem;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.4rem;
+    }
+
+    .control-btn.running .icon {
+      /* only visual tweak for running state */
+    }
+  </style>
+</head>
+<body>
+<div class="canvas-container">
+  <canvas id="milkywayCanvas" width="1600" height="900"></canvas>
+  
+  <!-- Start / Stop button -->
+  <button id="toggleBtn" class="control-btn" aria-label="Toggle animation">
+    <span class="icon" id="btnIcon">▶</span>
+    <span id="btnText">Start</span>
+  </button>
+
+  <div class="overlay">
+    <div class="subtitle-box">
+      <div class="time-label">
+        <span class="prefix">⏱️</span>
+        <span class="time-value" id="timeDisplay">0.0</span>
+        <span class="unit" id="unitDisplay">years</span>
+      </div>
+      <div class="caption">light crossing the Milky Way (100,000 light-years)</div>
+    </div>
+  </div>
+  <div class="credit">✦ cosmic journey</div>
+</div>
+
+<script>
+  (function() {
+    const canvas = document.getElementById('milkywayCanvas');
+    const ctx = canvas.getContext('2d');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const btnIcon = document.getElementById('btnIcon');
+    const btnText = document.getElementById('btnText');
+
+    // Fixed canvas internal size (1600x900)
+    const CANVAS_W = 1600;
+    const CANVAS_H = 900;
+
+    // ----- Milky Way galaxy parameters -----
+    const GALAXY_CENTER_X = CANVAS_W * 0.5;
+    const GALAXY_CENTER_Y = CANVAS_H * 0.5;
+    const GALAXY_RADIUS = 400;          // visual radius of the galaxy disk
+    const GALAXY_VERTICAL_SCALE = 0.42; // flattening factor
+
+    // Light animation
+    const LIGHT_TRAVEL_TIME = 12;        // seconds for full crossing (makes animation watchable)
+    const LIGHT_START_X = GALAXY_CENTER_X - GALAXY_RADIUS;
+    const LIGHT_END_X = GALAXY_CENTER_X + GALAXY_RADIUS;
+    const LIGHT_Y = GALAXY_CENTER_Y;     // travel along the galactic plane
+
+    // Time representation
+    const MILKY_WAY_DIAMETER_LY = 100000; // 100,000 light-years
+
+    // ----- Animation state -----
+    let animationFrame = null;
+    let isRunning = false;         // starts paused
+    let startTime = null;          // timestamp when the current run started
+    let pausedProgress = 0;        // progress (0..1) to hold when paused
+
+    // ----- DOM elements for subtitle -----
+    const timeDisplay = document.getElementById('timeDisplay');
+    const unitDisplay = document.getElementById('unitDisplay');
+
+    // ----- Pre-generate background stars (fixed, not moving) -----
+    const stars = [];
+    const STAR_COUNT = 1800;
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push({
+        x: Math.random() * CANVAS_W,
+        y: Math.random() * CANVAS_H,
+        radius: Math.random() * 1.5 + 0.3,
+        brightness: Math.random() * 0.7 + 0.3,
+        twinkleSpeed: Math.random() * 0.02 + 0.005,
+        phase: Math.random() * Math.PI * 2,
+      });
+    }
+
+    // ----- Pre-generate galaxy core & dust (for rich rendering) -----
+    const clusterStars = [];
+    const CLUSTER_COUNT = 1400;
+    for (let i = 0; i < CLUSTER_COUNT; i++) {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = Math.pow(Math.random(), 1.8) * GALAXY_RADIUS * 1.1;
+      const x = GALAXY_CENTER_X + Math.cos(angle) * dist;
+      const y = GALAXY_CENTER_Y + Math.sin(angle) * dist * GALAXY_VERTICAL_SCALE;
+      if (x > 0 && x < CANVAS_W && y > 0 && y < CANVAS_H) {
+        clusterStars.push({
+          x, y,
+          radius: Math.random() * 1.8 + 0.5,
+          brightness: Math.random() * 0.6 + 0.3,
+          color: `hsl(${40 + Math.random() * 30}, 70%, ${65 + Math.random() * 25}%)`,
+        });
+      }
+    }
+
+    // ----- Helper: draw Milky Way galaxy (static background) -----
+    function drawGalaxy() {
+      // 1. Central glow (elliptical)
+      ctx.save();
+      ctx.translate(GALAXY_CENTER_X, GALAXY_CENTER_Y);
+      ctx.scale(1, GALAXY_VERTICAL_SCALE * 0.9);
+      
+      const coreGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, GALAXY_RADIUS * 1.2);
+      coreGrad.addColorStop(0, 'rgba(255, 245, 210, 0.45)');
+      coreGrad.addColorStop(0.2, 'rgba(220, 200, 170, 0.25)');
+      coreGrad.addColorStop(0.5, 'rgba(150, 160, 200, 0.15)');
+      coreGrad.addColorStop(0.8, 'rgba(90, 110, 160, 0.08)');
+      coreGrad.addColorStop(1, 'rgba(40, 50, 80, 0)');
+      
+      ctx.beginPath();
+      ctx.arc(0, 0, GALAXY_RADIUS * 1.2, 0, Math.PI * 2);
+      ctx.fillStyle = coreGrad;
+      ctx.fill();
+      
+      // 2. Inner bright core
+      const innerGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, GALAXY_RADIUS * 0.3);
+      innerGrad.addColorStop(0, 'rgba(255, 250, 235, 0.9)');
+      innerGrad.addColorStop(0.5, 'rgba(240, 220, 180, 0.5)');
+      innerGrad.addColorStop(1, 'rgba(180, 170, 150, 0)');
+      ctx.beginPath();
+      ctx.arc(0, 0, GALAXY_RADIUS * 0.3, 0, Math.PI * 2);
+      ctx.fillStyle = innerGrad;
+      ctx.fill();
+      
+      ctx.restore();
+
+      // 3. Disk stars / clusters
+      for (let s of clusterStars) {
+        ctx.fillStyle = s.color;
+        ctx.shadowColor = s.color;
+        ctx.shadowBlur = s.radius * 3;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // 4. Diffuse dust lanes
+      ctx.save();
+      ctx.translate(GALAXY_CENTER_X, GALAXY_CENTER_Y);
+      ctx.scale(1, GALAXY_VERTICAL_SCALE);
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = 'transparent';
+      
+      for (let i = 0; i < 6; i++) {
+        const angle = i * 1.2;
+        ctx.beginPath();
+        ctx.ellipse(Math.cos(angle) * 140, Math.sin(angle) * 140, 180, 80, angle, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(10, 15, 30, 0.12)';
+        ctx.fill();
+      }
+      
+      for (let i = 0; i < 4; i++) {
+        const angle = i * 1.8 + 0.5;
+        ctx.beginPath();
+        ctx.ellipse(Math.cos(angle) * 220, Math.sin(angle) * 120, 240, 90, angle * 0.8, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(8, 12, 25, 0.1)';
+        ctx.fill();
+      }
+      
+      ctx.restore();
+    }
+
+    // ----- Draw traveling light + trail -----
+    function drawLight(progress) {
+      const x = LIGHT_START_X + (LIGHT_END_X - LIGHT_START_X) * progress;
+
+      const trailLength = Math.min(progress * (LIGHT_END_X - LIGHT_START_X), 260);
+      const trailStartX = Math.max(LIGHT_START_X, x - trailLength);
+      
+      const trailGrad = ctx.createLinearGradient(trailStartX, LIGHT_Y, x, LIGHT_Y);
+      trailGrad.addColorStop(0, 'rgba(180, 230, 255, 0)');
+      trailGrad.addColorStop(0.7, 'rgba(200, 240, 255, 0.35)');
+      trailGrad.addColorStop(1, 'rgba(255, 255, 255, 0.9)');
+      
+      ctx.save();
+      ctx.shadowBlur = 28;
+      ctx.shadowColor = 'rgba(150, 210, 255, 0.9)';
+      ctx.beginPath();
+      ctx.moveTo(trailStartX, LIGHT_Y);
+      ctx.lineTo(x, LIGHT_Y);
+      ctx.strokeStyle = trailGrad;
+      ctx.lineWidth = 7;
+      ctx.lineCap = 'round';
+      ctx.stroke();
+      
+      // Bright head
+      ctx.shadowBlur = 35;
+      ctx.shadowColor = '#b0e0ff';
+      ctx.beginPath();
+      ctx.arc(x, LIGHT_Y, 9, 0, Math.PI * 2);
+      ctx.fillStyle = '#ffffff';
+      ctx.fill();
+      
+      // Inner halo
+      ctx.shadowBlur = 50;
+      ctx.shadowColor = 'rgba(150, 220, 255, 1)';
+      ctx.beginPath();
+      ctx.arc(x, LIGHT_Y, 5, 0, Math.PI * 2);
+      ctx.fillStyle = '#f0f8ff';
+      ctx.fill();
+      
+      ctx.restore();
+
+      // small bolt icon
+      ctx.save();
+      ctx.font = 'bold 18px "Segoe UI", monospace';
+      ctx.fillStyle = 'rgba(220, 240, 255, 0.7)';
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = '#6aa6ff';
+      ctx.fillText('⚡', x + 18, LIGHT_Y - 16);
+      ctx.restore();
+    }
+
+    // ----- Twinkling stars -----
+    function drawTwinklingStars(timestamp) {
+      for (let s of stars) {
+        const twinkle = Math.sin(timestamp * s.twinkleSpeed + s.phase) * 0.25 + 0.75;
+        const radius = s.radius * (0.8 + twinkle * 0.4);
+        const brightness = s.brightness * (0.7 + twinkle * 0.3);
+        
+        ctx.save();
+        ctx.shadowBlur = radius * 5;
+        ctx.shadowColor = `rgba(200, 225, 255, ${brightness * 0.9})`;
+        ctx.fillStyle = `rgba(255, 255, 255, ${brightness})`;
+        ctx.beginPath();
+        ctx.arc(s.x, s.y, radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    // ----- Update subtitle -----
+    function updateSubtitle(progress) {
+      const years = progress * MILKY_WAY_DIAMETER_LY;
+      let displayStr;
+      if (years < 10) {
+        displayStr = years.toFixed(1);
+      } else {
+        displayStr = Math.round(years).toLocaleString('en-US');
+      }
+      timeDisplay.textContent = displayStr;
+    }
+
+    // ----- Main render function (called every frame) -----
+    function render(timestamp, progress) {
+      // Clear background
+      const bgGrad = ctx.createRadialGradient(
+        GALAXY_CENTER_X, GALAXY_CENTER_Y, 50,
+        GALAXY_CENTER_X, GALAXY_CENTER_Y, CANVAS_W * 0.8
+      );
+      bgGrad.addColorStop(0, '#121b2b');
+      bgGrad.addColorStop(0.5, '#0a0e17');
+      bgGrad.addColorStop(1, '#020304');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
+
+      drawGalaxy();
+      drawTwinklingStars(timestamp);
+      drawLight(progress);
+
+      // Dashed path
+      ctx.save();
+      ctx.shadowBlur = 0;
+      ctx.beginPath();
+      ctx.moveTo(LIGHT_START_X, LIGHT_Y);
+      ctx.lineTo(LIGHT_END_X, LIGHT_Y);
+      ctx.strokeStyle = 'rgba(120, 170, 255, 0.15)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([12, 20]);
+      ctx.stroke();
+      ctx.restore();
+
+      // Start/End labels
+      ctx.save();
+      ctx.font = '14px "Segoe UI", monospace';
+      ctx.fillStyle = 'rgba(180, 210, 255, 0.5)';
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = '#3a6ea5';
+      ctx.fillText('START', LIGHT_START_X - 45, LIGHT_Y - 20);
+      ctx.fillText('END', LIGHT_END_X + 15, LIGHT_Y - 20);
+      ctx.restore();
+
+      // Update subtitle
+      updateSubtitle(progress);
+    }
+
+    // ----- Animation loop -----
+    function animate(timestamp) {
+      if (!isRunning) {
+        // If paused, we don't advance progress; frame already rendered on pause
+        // But we still need to cancel the frame loop; we don't schedule a new frame.
+        animationFrame = null;
+        return;
+      }
+
+      if (startTime === null) {
+        startTime = timestamp - pausedProgress * LIGHT_TRAVEL_TIME * 1000;
+      }
+
+      const elapsedSeconds = (timestamp - startTime) / 1000;
+      let rawProgress = (elapsedSeconds % LIGHT_TRAVEL_TIME) / LIGHT_TRAVEL_TIME;
+      const progress = rawProgress;
+
+      // Save for pause
+      pausedProgress = progress;
+
+      // Render
+      render(timestamp, progress);
+
+      // Request next frame
+      animationFrame = requestAnimationFrame(animate);
+    }
+
+    // ----- Control: start / stop -----
+    function updateButtonState(running) {
+      if (running) {
+        btnIcon.textContent = '⏸';
+        btnText.textContent = 'Pause';
+        toggleBtn.classList.add('running');
+        toggleBtn.setAttribute('aria-label', 'Pause animation');
+      } else {
+        btnIcon.textContent = '▶';
+        btnText.textContent = 'Start';
+        toggleBtn.classList.remove('running');
+        toggleBtn.setAttribute('aria-label', 'Start animation');
+      }
+    }
+
+    function startAnimation() {
+      if (isRunning) return;
+      isRunning = true;
+      startTime = null; // will be set in first animate frame
+      // Keep pausedProgress as the starting progress
+      updateButtonState(true);
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+      animationFrame = requestAnimationFrame(animate);
+    }
+
+    function pauseAnimation() {
+      if (!isRunning) return;
+      isRunning = false;
+      if (animationFrame) {
+        cancelAnimationFrame(animationFrame);
+        animationFrame = null;
+      }
+      // pausedProgress already holds the last progress
+      updateButtonState(false);
+    }
+
+    function toggleAnimation() {
+      if (isRunning) {
+        pauseAnimation();
+      } else {
+        startAnimation();
+      }
+    }
+
+    // ----- Initial static render (paused at progress 0) -----
+    function renderStatic() {
+      const fakeTimestamp = performance.now(); // for twinkling, but progress = 0
+      render(fakeTimestamp, 0);
+      updateSubtitle(0);
+      pausedProgress = 0;
+    }
+
+    // Set up button event listener
+    toggleBtn.addEventListener('click', toggleAnimation);
+
+    // Initialize: static render, button says "Start"
+    renderStatic();
+    updateButtonState(false);
+
+    // Ensure that when paused, the canvas still shows the last frame correctly
+    // (It does because we don't clear it after pause.)
+
+    // Optional: handle window resize? Not needed since canvas internal size is fixed.
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+    });
+  })();
+</script>
+</body>
+</html>

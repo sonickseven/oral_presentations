@@ -1,0 +1,1783 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>The Speed of Light — Presentation</title>
+  <style>
+    :root {
+      --bg: #070c1c;
+      --panel: #111b34;
+      --text: #f0f5ff;
+      --muted: #a0b0cd;
+      --cyan: #43dcf5;
+      --purple: #a576ff;
+      --gold: #ffcc66;
+      --pink: #ff6ea0;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      color: var(--text);
+      background: var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: .7;
+      background-size: 370px 290px;
+    }
+
+    body.stars_bg::before {
+      background-image:
+        radial-gradient(2px 2px at 12% 18%, #dce8ff 98%, transparent),
+        radial-gradient(1px 1px at 73% 12%, #dce8ff 98%, transparent),
+        radial-gradient(1.5px 1.5px at 86% 71%, #8ddfff 98%, transparent),
+        radial-gradient(1px 1px at 31% 82%, #dce8ff 98%, transparent),
+        radial-gradient(1px 1px at 54% 43%, #dce8ff 98%, transparent),
+        radial-gradient(1px 1px at 95% 35%, #dce8ff 98%, transparent);
+    }
+
+    body.hidden_stars_bg::before {
+      background-image:
+        radial-gradient(2px 2px at 12% 18%, #dce8ff 98%, transparent),
+        radial-gradient(1px 1px at 73% 12%, #dce8ff 98%, transparent);
+    }
+
+    #deck {
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+
+    .slide {
+      display: none;
+      position: absolute;
+      inset: 0;
+      padding: clamp(28px, 5vw, 76px) clamp(28px, 7vw, 110px) 86px;
+      overflow: auto;
+      animation: appear .28s ease-out;
+    }
+
+    .slide.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(16px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .slide.active>*:not(.beam) {
+      animation: rise .6s cubic-bezier(.2, .8, .25, 1) both;
+    }
+
+    .slide.active>*:nth-child(2) {
+      animation-delay: .05s;
+    }
+
+    .slide.active>*:nth-child(3) {
+      animation-delay: .1s;
+    }
+
+    .slide.active>*:nth-child(4) {
+      animation-delay: .15s;
+    }
+
+    .slide.active>*:nth-child(5) {
+      animation-delay: .2s;
+    }
+
+    .slide.active>*:nth-child(6) {
+      animation-delay: .25s;
+    }
+
+    .eyebrow {
+      color: var(--cyan);
+      font-size: .78rem;
+      font-weight: 800;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(3.2rem, 8vw, 7.4rem);
+      line-height: .98;
+      margin: 24px 0;
+      max-width: 850px;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 4rem);
+      line-height: 1.05;
+      margin: 15px 0 12px;
+      letter-spacing: -.035em;
+    }
+
+    h3 {
+      margin: 0 0 14px;
+      color: var(--cyan);
+      font-size: 1rem;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    p {
+      color: var(--muted);
+      font-size: clamp(1rem, 1.7vw, 1.45rem);
+      line-height: 1.55;
+      max-width: 980px;
+    }
+
+    .lead {
+      color: var(--text);
+      font-size: clamp(1.25rem, 2.2vw, 2rem);
+      line-height: 1.35;
+    }
+
+    .number {
+      color: var(--cyan);
+      font-size: clamp(2.6rem, 6vw, 5.2rem);
+      font-weight: 850;
+      letter-spacing: -.04em;
+    }
+
+    .unit {
+      color: var(--text);
+      font-size: .95rem;
+      font-weight: 800;
+      letter-spacing: .14em;
+    }
+
+    .card {
+      background: rgba(17, 27, 52, .92);
+      border: 1px solid rgba(125, 160, 220, .15);
+      border-radius: 22px;
+      padding: clamp(22px, 3vw, 38px);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+      margin-top: 28px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 9px 15px;
+      background: var(--cyan);
+      color: #07101d;
+      font-size: .75rem;
+      font-weight: 850;
+      letter-spacing: .08em;
+    }
+
+    .tag.purple {
+      background: var(--purple);
+      color: white;
+    }
+
+    .highlight {
+      color: var(--gold);
+    }
+
+    .muted-small {
+      font-size: .9rem;
+      color: var(--muted);
+    }
+
+    .beam {
+      position: absolute;
+      right: 11%;
+      top: 22%;
+      width: 28%;
+      height: 36%;
+      display: flex;
+      gap: 14px;
+      transform: skewY(-22deg);
+      opacity: .9;
+    }
+
+    .beam span {
+      flex: 1;
+      border-radius: 12px;
+      background: linear-gradient(180deg, transparent, var(--cyan), var(--purple), transparent);
+      filter: drop-shadow(0 0 18px #43dcf588);
+    }
+
+    .chart-wrap {
+      margin-top: 24px;
+      padding: 18px 20px 10px;
+      background: rgba(17, 27, 52, .85);
+      border-radius: 18px;
+    }
+
+    .chart {
+      width: 100%;
+      height: 230px;
+      display: block;
+    }
+
+    .chart text {
+      fill: var(--muted);
+      font-size: 12px;
+    }
+
+    .chart .axis {
+      stroke: #536482;
+      stroke-width: 1;
+    }
+
+    .chart .curve {
+      fill: none;
+      stroke: var(--cyan);
+      stroke-width: 4;
+      stroke-linecap: round;
+    }
+
+    .chart .dot {
+      fill: var(--gold);
+    }
+
+    .timeline {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 30px;
+    }
+
+    .timeline .line {
+      height: 3px;
+      flex: 1;
+      background: linear-gradient(90deg, var(--cyan), var(--purple));
+    }
+
+    .timeline .earth {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 20px #ffcc6688;
+    }
+
+    .stars {
+      position: relative;
+      height: min(44vh, 390px);
+      margin-top: 18px;
+      border-radius: 20px;
+      overflow: hidden;
+    }
+
+    .star {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 8px currentColor;
+      opacity: var(--star-opacity, 1);
+      transform: scale(var(--star-scale, 1));
+      transition: opacity 2s, transform .35s;
+    }
+
+    .star:nth-child(3n) {
+      background: var(--cyan);
+    }
+
+    .star:nth-child(5n) {
+      background: var(--gold);
+      width: 4px;
+      height: 4px;
+    }
+
+    .stars.hidden-stars .star:nth-child(3n + 1),
+    .stars.hidden-stars .star:nth-child(3n + 2) {
+      opacity: 0;
+      transform: scale(.1);
+    }
+
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 22px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 999px;
+      padding: 13px 19px;
+      font: inherit;
+      font-size: .9rem;
+      font-weight: 800;
+      cursor: pointer;
+      color: #07101d;
+      background: var(--cyan);
+      transition: transform .15s, filter .15s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+    }
+
+    button.secondary {
+      color: var(--text);
+      background: #263452;
+      border: 1px solid #526383;
+    }
+
+    button.purple {
+      background: var(--purple);
+      color: white;
+    }
+
+    .bottom {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      padding: 14px clamp(18px, 4vw, 56px);
+      background: linear-gradient(transparent, rgba(7, 12, 28, .96) 35%);
+    }
+
+    .progress {
+      flex: 1;
+      height: 4px;
+      background: #25314d;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress>span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--cyan), var(--purple), var(--gold));
+      box-shadow: 0 0 12px #43dcf599;
+      transition: width .35s cubic-bezier(.2, .8, .25, 1);
+    }
+
+    .counter {
+      min-width: 55px;
+      text-align: right;
+      color: var(--muted);
+      font-size: .82rem;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: .76rem;
+      white-space: nowrap;
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      z-index: 20;
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      background: rgba(2, 5, 14, .88);
+      backdrop-filter: blur(12px);
+    }
+
+    .modal-box {
+      width: min(560px, 100%);
+      text-align: center;
+      background: var(--panel);
+      border: 1px solid #344363;
+      border-radius: 24px;
+      padding: 36px;
+      box-shadow: 0 25px 90px #0008;
+    }
+
+    .modal-box h2 {
+      font-size: 2rem;
+    }
+
+    .modal-box p {
+      font-size: 1rem;
+      margin: 12px auto 24px;
+    }
+
+    .source-list {
+      padding-left: 1.2rem;
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: .95rem;
+    }
+
+    a {
+      color: var(--cyan);
+    }
+
+    .end {
+      margin-top: auto;
+      padding-top: 20px;
+      color: var(--cyan);
+      font-size: clamp(1.5rem, 3vw, 2.5rem);
+      font-weight: 800;
+    }
+
+    @media (max-width: 760px) {
+      .slide {
+        padding: 28px 22px 95px;
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+
+      .beam {
+        opacity: .2;
+        right: 5%;
+        width: 35%;
+      }
+
+      .hint {
+        display: none;
+      }
+
+      .bottom {
+        gap: 9px;
+      }
+
+      button {
+        padding: 11px 14px;
+      }
+
+      .stars {
+        height: 32vh;
+      }
+    }
+
+    /* ---------- Slide 3: embedded Voyager animation ---------- */
+    .slide.voyager-slide {
+      overflow: hidden;
+      padding-bottom: 78px;
+    }
+
+    .voyager-slide h2 {
+      font-size: clamp(1.7rem, 3vw, 2.7rem);
+      margin: 10px 0 6px;
+    }
+
+    .voyager-slide>p {
+      margin: 0 0 14px;
+      font-size: clamp(.95rem, 1.3vw, 1.15rem);
+    }
+
+    .voyager-stage {
+      position: relative;
+      flex: 1 1 auto;
+      min-height: 300px;
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(56, 189, 248, .18);
+      box-shadow: 0 28px 90px rgba(2, 8, 20, .75), inset 0 0 80px rgba(56, 189, 248, .04);
+    }
+
+    /* ===== Scoped Voyager animation styles (no global resets) ===== */
+    #voyager-presentation-slide,
+    #voyager-presentation-slide * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    #voyager-presentation-slide {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      background: radial-gradient(circle at 18% 52%, #0c192c 0%, #050811 55%, #020308 100%);
+      color: #f1f5f9;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    #vp-space-canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    #voyager-presentation-slide .vp-hud-top {
+      position: absolute;
+      top: 18px;
+      left: 20px;
+      right: 20px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: flex-start;
+      gap: 12px;
+      pointer-events: none;
+      z-index: 10;
+    }
+
+    #voyager-presentation-slide .vp-title-block {
+      background: rgba(10, 17, 32, .72);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(56, 189, 248, .25);
+      border-radius: 14px;
+      padding: 14px 20px;
+      max-width: 440px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, .45);
+    }
+
+    #voyager-presentation-slide .vp-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: #38bdf8;
+      background: rgba(56, 189, 248, .14);
+      padding: 3px 8px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+    }
+
+    #voyager-presentation-slide .vp-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -.3px;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    #voyager-presentation-slide .vp-subtitle {
+      font-size: 13px;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    #voyager-presentation-slide .vp-telemetry-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-left: auto;
+    }
+
+    #voyager-presentation-slide .vp-stat-card {
+      background: rgba(10, 17, 32, .78);
+      -webkit-backdrop-filter: blur(10px);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(148, 163, 184, .2);
+      border-radius: 13px;
+      padding: 10px 15px;
+      min-width: 145px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .4);
+      transition: border-color .3s ease, transform .3s ease;
+    }
+
+    #voyager-presentation-slide .vp-stat-card.vp-highlight {
+      border-color: rgba(250, 204, 21, .65);
+      box-shadow: 0 0 24px rgba(250, 204, 21, .16);
+    }
+
+    #voyager-presentation-slide .vp-stat-label {
+      font-size: 10.5px;
+      text-transform: uppercase;
+      letter-spacing: .9px;
+      color: #94a3b8;
+      margin-bottom: 3px;
+      font-weight: 600;
+    }
+
+    #voyager-presentation-slide .vp-stat-value {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 19px;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+
+    #voyager-presentation-slide .vp-stat-sub {
+      font-size: 11.5px;
+      color: #38bdf8;
+      margin-top: 2px;
+      font-weight: 500;
+    }
+
+    #voyager-presentation-slide .vp-stat-card.vp-highlight .vp-stat-value {
+      color: #fde047;
+    }
+
+    #voyager-presentation-slide .vp-stat-card.vp-highlight .vp-stat-sub {
+      color: #fef08a;
+    }
+
+    #voyager-presentation-slide .vp-controls-bar {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      background: rgba(10, 17, 32, .82);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(148, 163, 184, .22);
+      padding: 9px 14px;
+      border-radius: 15px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, .55);
+      z-index: 15;
+    }
+
+    #voyager-presentation-slide .vp-btn {
+      appearance: none;
+      border: 1px solid rgba(148, 163, 184, .25);
+      background: rgba(30, 41, 59, .75);
+      color: #f8fafc;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 13px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all .2s ease;
+      font-family: inherit;
+    }
+
+    #voyager-presentation-slide .vp-btn:hover {
+      background: rgba(51, 65, 85, .95);
+      border-color: rgba(56, 189, 248, .55);
+      transform: translateY(-1px);
+    }
+
+    #voyager-presentation-slide .vp-btn:active {
+      transform: translateY(0);
+    }
+
+    #voyager-presentation-slide .vp-btn-primary {
+      background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      border-color: rgba(125, 211, 252, .5);
+      color: #fff;
+    }
+
+    #voyager-presentation-slide .vp-btn-primary:hover {
+      background: linear-gradient(135deg, #0369a1 0%, #1d4ed8 100%);
+      box-shadow: 0 0 16px rgba(56, 189, 248, .45);
+    }
+
+    #voyager-presentation-slide .vp-star-compare {
+      position: absolute;
+      bottom: 72px;
+      left: 20px;
+      right: 20px;
+      max-width: 780px;
+      margin: 0 auto;
+      background: rgba(10, 17, 32, .84);
+      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(251, 146, 60, .35);
+      border-radius: 14px;
+      padding: 11px 17px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .55);
+      z-index: 11;
+      pointer-events: none;
+    }
+
+    #voyager-presentation-slide .vp-compare-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 7px;
+    }
+
+    #voyager-presentation-slide .vp-compare-title {
+      font-size: 12px;
+      font-weight: 700;
+      color: #fdba74;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: .3px;
+    }
+
+    #voyager-presentation-slide .vp-star-dot-icon {
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #fb923c;
+      box-shadow: 0 0 8px #f97316;
+    }
+
+    #voyager-presentation-slide .vp-compare-badge {
+      font-family: "SFMono-Regular", Consolas, monospace;
+      font-size: 11px;
+      color: #fde047;
+      background: rgba(250, 204, 21, .12);
+      border: 1px solid rgba(250, 204, 21, .3);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+
+    #voyager-presentation-slide .vp-compare-bar-track {
+      position: relative;
+      width: 100%;
+      height: 10px;
+      background: rgba(30, 41, 59, .9);
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, .22);
+      overflow: visible;
+      margin: 8px 0 7px 0;
+    }
+
+    #voyager-presentation-slide .vp-compare-bar-fill {
+      height: 100%;
+      min-width: 4px;
+      width: .065%;
+      background: linear-gradient(90deg, #38bdf8, #fde047);
+      border-radius: 999px;
+      box-shadow: 0 0 10px rgba(56, 189, 248, .8);
+      transition: width .1s linear;
+    }
+
+    #voyager-presentation-slide .vp-compare-star-marker {
+      position: absolute;
+      right: -2px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #fff7ed 15%, #fb923c 60%, #ea580c 100%);
+      box-shadow: 0 0 14px #f97316;
+    }
+
+    #voyager-presentation-slide .vp-compare-stats {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 11px;
+      color: #cbd5e1;
+    }
+
+    #voyager-presentation-slide .vp-compare-stats strong {
+      color: #f8fafc;
+    }
+
+    #voyager-presentation-slide .vp-scrubber-wrap {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 6px;
+    }
+
+    #voyager-presentation-slide .vp-scrubber-wrap label {
+      font-size: 12px;
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    #voyager-presentation-slide #vp-timeline-slider {
+      width: 120px;
+      accent-color: #38bdf8;
+      cursor: pointer;
+    }
+
+    #voyager-presentation-slide .vp-title-block {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      #voyager-presentation-slide .vp-hud-top {
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        gap: 8px;
+      }
+
+      #voyager-presentation-slide .vp-telemetry-grid {
+        gap: 6px;
+      }
+
+      #voyager-presentation-slide .vp-stat-card {
+        min-width: 100px;
+        padding: 7px 10px;
+      }
+
+      #voyager-presentation-slide .vp-stat-label {
+        font-size: 9px;
+      }
+
+      #voyager-presentation-slide .vp-stat-value {
+        font-size: 14px;
+      }
+
+      #voyager-presentation-slide .vp-stat-sub {
+        font-size: 10px;
+      }
+
+      #voyager-presentation-slide .vp-controls-bar {
+        width: 95%;
+        bottom: 10px;
+        padding: 7px 9px;
+        gap: 5px;
+      }
+
+      #voyager-presentation-slide .vp-btn {
+        padding: 6px 9px;
+        font-size: 11px;
+      }
+
+      #voyager-presentation-slide #vp-timeline-slider {
+        width: 70px;
+      }
+
+      #voyager-presentation-slide .vp-star-compare {
+        bottom: 62px;
+        left: 10px;
+        right: 10px;
+        padding: 8px 11px;
+      }
+
+      #voyager-presentation-slide .vp-compare-title {
+        font-size: 10.5px;
+      }
+
+      #voyager-presentation-slide .vp-compare-stats {
+        font-size: 9.5px;
+      }
+
+      #voyager-presentation-slide .vp-compare-badge {
+        font-size: 9.5px;
+      }
+
+      .voyager-stage {
+        min-height: 340px;
+      }
+    }
+  </style>
+</head>
+
+<body class="stars_bg">
+  <div id="deck" aria-live="polite">
+    <section class="slide active">
+      <div class="eyebrow">A quick question about the universe</div>
+      <h1>How fast is<br><span style="color:var(--cyan)">LIGHT?</span></h1>
+      <p class="lead">Does anyone here know the actual number?</p>
+      <div class="card" style="width:min(510px,100%);margin-top:12px">
+        <div class="number">299,792,458</div>
+        <div class="unit">METERS PER SECOND</div>
+        <p class="muted-small">Approximately 300,000 km/s — the universal speed limit described by Einstein’s theory of
+          relativity.</p>
+      </div>
+      <div class="beam" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">01 / The limit</div>
+      <h2>Why can’t we reach it?</h2>
+      <p>The closer an object with mass gets to light speed, the more energy it takes to accelerate it further.</p>
+      <div class="grid">
+        <div class="card">
+          <h3>The energy wall</h3>
+          <p class="lead" style="color:var(--text)">Reaching 100% of light speed would require <span
+              class="highlight">infinite energy</span>.</p>
+          <p>Objects with mass can get close — but they can never reach the speed of light.</p>
+        </div>
+        <div class="chart-wrap">
+          <svg class="chart" viewBox="0 0 520 230" role="img"
+            aria-label="Relativistic kinetic energy rises steeply as speed approaches the speed of light">
+            <line class="axis" x1="48" y1="190" x2="500" y2="190" />
+            <line class="axis" x1="48" y1="18" x2="48" y2="190" />
+            <path class="curve" d="M48 190 C170 189 270 180 330 155 S420 70 474 15" />
+            <circle class="dot" cx="420" cy="70" r="5" />
+            <circle class="dot" cx="474" cy="15" r="5" />
+            <text x="48" y="211">0%</text><text x="260" y="211">50%</text><text x="450" y="211">99% → 100%</text>
+            <text x="55" y="15">Energy required ↑</text>
+          </svg>
+          <div class="muted-small">Conceptual curve — the energy rises without limit as speed approaches c.</div>
+        </div>
+      </div>
+      <p class="muted-small">CERN protons reach about 99.9999991% of light speed. That is a particle-beam record, not a
+        spacecraft record.</p>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">02 / Relativity</div>
+      <h2>Time doesn’t pass at the same rate.</h2>
+      <p>Special relativity predicts <strong style="color:var(--text)">time dilation</strong>: a moving clock runs
+        slower relative to an observer at rest.</p>
+      <div class="grid">
+        <div class="card">
+          <span class="tag">ON EARTH</span>
+          <div class="number" style="color:var(--gold);margin-top:18px">7.09 days</div>
+          <p style="color:var(--text)">Pass for people waiting at home.</p>
+        </div>
+        <div class="card">
+          <span class="tag purple">ON THE SHIP</span>
+          <div class="number" style="margin-top:18px">1 day</div>
+          <p style="color:var(--text)">Pass for the traveler moving at 99% of light speed.</p>
+        </div>
+      </div>
+      <p class="muted-small">At 90% of c, one day for the traveler is about 2.29 days on Earth. At 99% of c, it is about
+        7.09 days.</p>
+    </section>
+
+    <section class="slide voyager-slide">
+      <div class="eyebrow">03 / Cosmic distances</div>
+      <h2>Voyager 1: one light-day away.</h2>
+      <p>A light-day is a distance — how far light travels in 24 hours. Voyager 1 has spent nearly 49 years covering it.
+      </p>
+
+      <div class="voyager-stage">
+        <div id="voyager-presentation-slide">
+          <canvas id="vp-space-canvas"></canvas>
+
+          <div class="vp-hud-top">
+            <div class="vp-title-block">
+              <span class="vp-badge">NASA Deep Space Mission</span>
+              <h1 class="vp-title">Voyager 1: Journey to 1 Light-Day</h1>
+              <p class="vp-subtitle">Launched Sept 5, 1977 &mdash; Traveling into interstellar space for over 47+ years.
+              </p>
+            </div>
+            <div class="vp-telemetry-grid">
+              <div class="vp-stat-card">
+                <div class="vp-stat-label">Timeline &amp; Duration</div>
+                <div class="vp-stat-value" id="vp-hud-year">1977</div>
+                <div class="vp-stat-sub" id="vp-hud-elapsed">0.0 Years in Space</div>
+              </div>
+              <div class="vp-stat-card">
+                <div class="vp-stat-label">Distance from Earth</div>
+                <div class="vp-stat-value" id="vp-hud-km">0.00B km</div>
+                <div class="vp-stat-sub" id="vp-hud-au">0.0 AU</div>
+              </div>
+              <div class="vp-stat-card" id="vp-card-light">
+                <div class="vp-stat-label">One-Way Light Time</div>
+                <div class="vp-stat-value" id="vp-hud-light">0h 00m</div>
+                <div class="vp-stat-sub" id="vp-hud-light-sub">Speed of Light: 299,792 km/s</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="vp-star-compare">
+            <div class="vp-compare-header">
+              <div class="vp-compare-title">
+                <span class="vp-star-dot-icon"></span>
+                <span>Scale Comparison: Voyager 1 vs. Nearest Star (Proxima Centauri)</span>
+              </div>
+              <div class="vp-compare-badge" id="vp-compare-pct">0.000% of Star Distance</div>
+            </div>
+            <div class="vp-compare-bar-track">
+              <div class="vp-compare-bar-fill" id="vp-compare-fill"></div>
+              <div class="vp-compare-star-marker" title="Proxima Centauri (4.24 Light-Years)"></div>
+            </div>
+            <div class="vp-compare-stats">
+              <span>Voyager 1: <strong id="vp-compare-voyager-ld">0.00 Light-Days</strong> (~173 AU at 1
+                Light-Day)</span>
+              <span>Proxima Centauri: <strong>4.24 Light-Years</strong> (~1,549 Light-Days &bull; ~73,000+ yrs
+                travel)</span>
+            </div>
+          </div>
+
+          <div class="vp-controls-bar">
+            <button type="button" class="vp-btn vp-btn-primary" id="vp-btn-play">
+              <span id="vp-play-icon">&#10074;&#10074;</span> <span id="vp-play-text">Pause</span>
+            </button>
+            <button type="button" class="vp-btn" id="vp-btn-replay">&#8634; Restart</button>
+            <button type="button" class="vp-btn" id="vp-btn-speed">Speed: 2x</button>
+            <div class="vp-scrubber-wrap">
+              <label for="vp-timeline-slider">Year</label>
+              <input type="range" id="vp-timeline-slider" min="0" max="1000" value="0" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="muted-small" style="margin-top:10px">Even this distance is tiny compared with the distances between
+        stars.</p>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">04 / Looking into the past</div>
+      <h2>When we look at stars, we look back in time.</h2>
+      <p>Light needs time to cross space. We see distant stars as they were when their light began its journey — not
+        necessarily as they are right now.</p>
+      <div class="stars" id="starField" aria-label="Animated star field"></div>
+      <div class="actions">
+        <button id="hideStars">Hide some stars</button>
+        <button class="secondary" id="showStars">Show all stars</button>
+      </div>
+      <p class="muted-small">This is a visual metaphor, not a claim that a particular percentage of visible stars has
+        already died.</p>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">05 / The final limit</div>
+      <h2>The closer you get, the harder it gets.</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>Real physics</h3>
+          <p class="lead" style="color:var(--text)">As speed approaches c, energy and momentum increase without limit.
+          </p>
+          <p>Time dilation becomes extreme. An object with mass cannot reach light speed.</p>
+        </div>
+        <div class="card">
+          <h3>Fiction vs. physics</h3>
+          <div class="number" style="color:var(--gold)">The Flash</div>
+          <p>In DC Comics, he can break these limits and travel through time. That is a superpower — not a scientific
+            prediction.</p>
+        </div>
+      </div>
+      <div class="end">Thanks for listening. Any questions?</div>
+    </section>
+
+    <section class="slide">
+      <div class="eyebrow">Sources</div>
+      <h2>Explore further.</h2>
+      <p>Scientific references for the figures and explanations in this presentation.</p>
+      <ul class="source-list">
+        <li><a href="https://www.nasa.gov/" target="_blank" rel="noopener">NASA</a> — Voyager 1 mission updates and
+          spacecraft data.</li>
+        <li><a href="https://home.cern/" target="_blank" rel="noopener">CERN</a> — particle accelerators and proton
+          speeds.</li>
+        <li><a href="https://www.einstein-online.info/en/" target="_blank" rel="noopener">Einstein Online</a> — special
+          relativity and time dilation.</li>
+        <li><a href="https://science.nasa.gov/heliophysics/" target="_blank" rel="noopener">NASA Heliophysics</a> —
+          Parker Solar Probe and spacecraft speed records.</li>
+      </ul>
+      <div class="end">The universe is vast. Light is fast. Space is bigger.</div>
+    </section>
+  </div>
+
+  <div class="bottom">
+    <button class="secondary" id="prev" aria-label="Previous slide">← Back</button>
+    <button id="next" aria-label="Next slide">Next →</button>
+    <div class="progress"><span id="progressBar"></span></div>
+    <span class="counter" id="counter">1 / 7</span>
+    <span class="hint">← → navigate · F fullscreen · Esc exit</span>
+  </div>
+
+  <div class="modal" id="fullscreenPrompt" role="dialog" aria-modal="true" aria-labelledby="promptTitle">
+    <div class="modal-box">
+      <div class="eyebrow">Ready to present?</div>
+      <h2 id="promptTitle">Use fullscreen mode</h2>
+      <p>For the best experience, start the presentation in fullscreen. You can also press <strong>F</strong> at any
+        time.</p>
+      <button id="startPresentation">Start presentation</button>
+      <button class="secondary" id="startWindowed" style="margin-left:8px">Continue in window</button>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      const slides = [...document.querySelectorAll('.slide')];
+      const prev = document.getElementById('prev');
+      const next = document.getElementById('next');
+      const counter = document.getElementById('counter');
+      const progress = document.getElementById('progressBar');
+      const prompt = document.getElementById('fullscreenPrompt');
+      let current = 0;
+
+      function showSlide(index) {
+        current = Math.max(0, Math.min(slides.length - 1, index));
+        slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
+        counter.textContent = `${current + 1} / ${slides.length}`;
+        progress.style.width = `${((current + 1) / slides.length) * 100}%`;
+        prev.disabled = current === 0;
+        next.disabled = current === slides.length - 1;
+        prev.style.opacity = prev.disabled ? '.4' : '1';
+        next.style.opacity = next.disabled ? '.4' : '1';
+      }
+      function goNext() {showSlide(current + 1);}
+      function goPrev() {showSlide(current - 1);}
+
+      prev.addEventListener('click', goPrev);
+      next.addEventListener('click', goNext);
+
+      document.addEventListener('keydown', (event) => {
+        const tag = event.target.tagName;
+        if (tag === 'INPUT') return;
+        if (tag === 'BUTTON' && (event.key === ' ' || event.key === 'Enter')) return;
+        if (event.key === 'ArrowRight' || event.key === 'PageDown' || event.key === ' ') {
+          event.preventDefault(); goNext();
+        } else if (event.key === 'ArrowLeft' || event.key === 'PageUp') {
+          event.preventDefault(); goPrev();
+        } else if (event.key.toLowerCase() === 'f') {
+          toggleFullscreen();
+        } else if (event.key === 'Home') {
+          showSlide(0);
+        } else if (event.key === 'End') {
+          showSlide(slides.length - 1);
+        }
+      });
+
+      async function toggleFullscreen() {
+        try {
+          if (!document.fullscreenElement) await document.documentElement.requestFullscreen();
+          else await document.exitFullscreen();
+        } catch (error) {
+          alert('Fullscreen is not available in this browser. You can still present in this window.');
+        }
+      }
+
+      document.getElementById('startPresentation').addEventListener('click', async () => {
+        prompt.style.display = 'none';
+        await toggleFullscreen();
+      });
+      document.getElementById('startWindowed').addEventListener('click', () => {
+        prompt.style.display = 'none';
+      });
+
+      const field = document.getElementById('starField');
+      for (let i = 0; i < 150; i++) {
+        const star = document.createElement('span');
+        star.className = 'star';
+        star.style.left = `${Math.random() * 98 + 1}%`;
+        star.style.top = `${Math.random() * 96 + 2}%`;
+        star.style.setProperty('--star-opacity', Math.random() * .65 + .35);
+        star.style.setProperty('--star-scale', Math.random() * 1.4 + .5);
+        field.appendChild(star);
+      }
+
+      document.querySelector('#hideStars')?.addEventListener('click', () => {
+        const bodyStars = document.querySelector('body');
+        console.log('stars_bg clicked');
+        field.classList.add('hidden-stars')
+        bodyStars.classList.add('hidden_stars_bg')
+        bodyStars.classList.remove('stars_bg')
+      });
+      document.querySelector('#showStars')?.addEventListener('click', () => {
+        const bodyStars = document.querySelector('body');
+        console.log('hidden_stars_bg clicked');
+        field.classList.remove('hidden-stars')
+        bodyStars.classList.remove('hidden_stars_bg')
+        bodyStars.classList.add('stars_bg')
+      });
+
+      // Initial state: the fullscreen prompt is deliberately shown on page load.
+      showSlide(0);
+    })();
+  </script>
+
+  <script>
+    (function () {
+      const container = document.getElementById("voyager-presentation-slide");
+      if (!container) return;
+      const canvas = document.getElementById("vp-space-canvas");
+      const ctx = canvas.getContext("2d");
+
+      const elYear = document.getElementById("vp-hud-year");
+      const elElapsed = document.getElementById("vp-hud-elapsed");
+      const elKm = document.getElementById("vp-hud-km");
+      const elAu = document.getElementById("vp-hud-au");
+      const elLight = document.getElementById("vp-hud-light");
+      const elLightSub = document.getElementById("vp-hud-light-sub");
+      const elCardLight = document.getElementById("vp-card-light");
+
+      const elComparePct = document.getElementById("vp-compare-pct");
+      const elCompareFill = document.getElementById("vp-compare-fill");
+      const elCompareVoyagerLd = document.getElementById("vp-compare-voyager-ld");
+
+      const btnPlay = document.getElementById("vp-btn-play");
+      const playIcon = document.getElementById("vp-play-icon");
+      const playText = document.getElementById("vp-play-text");
+      const btnReplay = document.getElementById("vp-btn-replay");
+      const btnSpeed = document.getElementById("vp-btn-speed");
+      const sliderTimeline = document.getElementById("vp-timeline-slider");
+
+      const START_YEAR = 1977.68;
+      const END_YEAR = 2026.9;
+      const TOTAL_YEARS = END_YEAR - START_YEAR;
+
+      const MAX_KM_BILLIONS = 25.90;
+      const MAX_AU = 173.1;
+      const MAX_LIGHT_HOURS = 24.0;
+
+      const PROXIMA_LIGHT_DAYS = 1548.7;
+
+      const MILESTONES = [
+        {p: 0.03, year: 1979, label: "1979: Jupiter Flyby"},
+        {p: 0.07, year: 1980, label: "1980: Saturn Flyby"},
+        {p: 0.26, year: 1990, label: "1990: 'Pale Blue Dot' Photo"},
+        {p: 0.71, year: 2012, label: "2012: Heliopause / Interstellar Space"},
+        {p: 0.96, year: 2024, label: "47+ Years in Space"},
+        {p: 1.00, year: 2026, label: "Today (2026): 1 Light-Day Away"}
+      ];
+
+      let width = 0;
+      let height = 0;
+      let dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      let isPlaying = true;
+      const SPEED_OPTIONS = [1, 2, 4];
+      let speedIndex = 1;
+      let speedMultiplier = SPEED_OPTIONS[speedIndex];
+
+      let progress = 0.0;
+      const BASE_DURATION_SEC = 18;
+
+      let stars = [];
+      let lightPulses = [];
+      let autoPulseTimer = 0;
+      let lastTimestamp = 0;
+
+      function resizeCanvas() {
+        const rect = container.getBoundingClientRect();
+        width = rect.width;
+        height = rect.height;
+        dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+        canvas.width = Math.max(1, Math.floor(width * dpr));
+        canvas.height = Math.max(1, Math.floor(height * dpr));
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        initStars();
+      }
+
+      function initStars() {
+        const starCount = Math.floor((width * height) / 4200);
+        stars = [];
+        for (let i = 0; i < starCount; i++) {
+          stars.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            radius: Math.random() * 1.5 + 0.3,
+            baseAlpha: Math.random() * 0.65 + 0.2,
+            twinkleSpeed: Math.random() * 2.5 + 0.8,
+            twinkleOffset: Math.random() * Math.PI * 2,
+            tint: Math.random() > 0.82 ? "#bae6fd" : (Math.random() > 0.88 ? "#fef08a" : "#ffffff")
+          });
+        }
+      }
+
+      function getEarthPos() {
+        const x = Math.max(70, width * 0.11);
+        const y = height * 0.44;
+        return {x, y};
+      }
+
+      function getVoyagerPos(currentProgress) {
+        const earth = getEarthPos();
+        const startX = earth.x + 52;
+        const endX = width - Math.max(195, width * 0.24);
+        const x = startX + (endX - startX) * currentProgress;
+        const y = earth.y - Math.sin(currentProgress * Math.PI * 0.65) * (height * 0.06);
+        return {x, y};
+      }
+
+      function getProximaPos() {
+        const x = width - Math.max(70, width * 0.08);
+        const y = height * 0.36;
+        return {x, y};
+      }
+
+      function fireLightPulse() {
+        lightPulses.push({progress: 0, createdAt: performance.now()});
+      }
+
+      function drawStars(timeSec) {
+        for (let i = 0; i < stars.length; i++) {
+          const s = stars[i];
+          const alpha = s.baseAlpha + Math.sin(timeSec * s.twinkleSpeed + s.twinkleOffset) * 0.22;
+          ctx.globalAlpha = Math.max(0.05, Math.min(1, alpha));
+          ctx.fillStyle = s.tint;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+      }
+
+      function drawTrajectoryAndMilestones(earth, voyager) {
+        const startPos = getVoyagerPos(0);
+        const endPos = getVoyagerPos(1);
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(startPos.x, startPos.y);
+        for (let step = 1; step <= 60; step++) {
+          const pt = getVoyagerPos(step / 60);
+          ctx.lineTo(pt.x, pt.y);
+        }
+        ctx.strokeStyle = "rgba(148, 163, 184, 0.18)";
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([5, 6]);
+        ctx.stroke();
+        ctx.restore();
+
+        if (progress > 0.002) {
+          const grad = ctx.createLinearGradient(startPos.x, startPos.y, voyager.x, voyager.y);
+          grad.addColorStop(0, "rgba(56, 189, 248, 0.08)");
+          grad.addColorStop(0.7, "rgba(56, 189, 248, 0.55)");
+          grad.addColorStop(1, "rgba(253, 224, 71, 0.95)");
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(startPos.x, startPos.y);
+          const steps = Math.max(2, Math.floor(progress * 60));
+          for (let step = 1; step <= steps; step++) {
+            const p = (step / steps) * progress;
+            const pt = getVoyagerPos(p);
+            ctx.lineTo(pt.x, pt.y);
+          }
+          ctx.strokeStyle = grad;
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          ctx.restore();
+        }
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(endPos.x, endPos.y - 68);
+        ctx.lineTo(endPos.x, endPos.y + 68);
+        ctx.strokeStyle = progress >= 0.99 ? "rgba(250, 204, 21, 0.85)" : "rgba(250, 204, 21, 0.3)";
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.stroke();
+
+        ctx.fillStyle = progress >= 0.99 ? "#fde047" : "rgba(253, 224, 71, 0.75)";
+        ctx.font = "700 11px -apple-system, BlinkMacSystemFont, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("1 LIGHT-DAY", endPos.x, endPos.y - 76);
+        ctx.font = "400 10px monospace";
+        ctx.fillText("(24h / ~25.9B km)", endPos.x, endPos.y + 82);
+        ctx.restore();
+
+        drawProximaCentauri(endPos);
+
+        MILESTONES.forEach((m) => {
+          if (m.p >= 0.99) return;
+          const pt = getVoyagerPos(m.p);
+          const reached = progress >= m.p;
+
+          ctx.save();
+          ctx.beginPath();
+          ctx.arc(pt.x, pt.y, reached ? 4 : 3, 0, Math.PI * 2);
+          ctx.fillStyle = reached ? "#38bdf8" : "rgba(148, 163, 184, 0.35)";
+          ctx.fill();
+
+          if (reached) {
+            ctx.fillStyle = "rgba(186, 230, 253, 0.85)";
+            ctx.font = "600 10px -apple-system, BlinkMacSystemFont, sans-serif";
+            ctx.textAlign = "center";
+            ctx.fillText(m.year, pt.x, pt.y + 18);
+          }
+          ctx.restore();
+        });
+      }
+
+      function drawEarth(earth) {
+        const radius = Math.max(18, Math.min(26, width * 0.022));
+
+        const glow = ctx.createRadialGradient(earth.x, earth.y, radius * 0.6, earth.x, earth.y, radius * 2.5);
+        glow.addColorStop(0, "rgba(56, 189, 248, 0.45)");
+        glow.addColorStop(0.5, "rgba(14, 165, 233, 0.14)");
+        glow.addColorStop(1, "rgba(14, 165, 233, 0)");
+
+        ctx.beginPath();
+        ctx.arc(earth.x, earth.y, radius * 2.5, 0, Math.PI * 2);
+        ctx.fillStyle = glow;
+        ctx.fill();
+
+        const oceanGrad = ctx.createRadialGradient(
+          earth.x - radius * 0.35, earth.y - radius * 0.35, radius * 0.1,
+          earth.x, earth.y, radius
+        );
+        oceanGrad.addColorStop(0, "#7dd3fc");
+        oceanGrad.addColorStop(0.45, "#0284c7");
+        oceanGrad.addColorStop(1, "#0f172a");
+
+        ctx.beginPath();
+        ctx.arc(earth.x, earth.y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = oceanGrad;
+        ctx.fill();
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.arc(earth.x, earth.y, radius, 0, Math.PI * 2);
+        ctx.clip();
+
+        ctx.fillStyle = "rgba(74, 222, 128, 0.65)";
+        ctx.beginPath();
+        ctx.ellipse(earth.x - radius * 0.25, earth.y - radius * 0.15, radius * 0.38, radius * 0.28, 0.3, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.ellipse(earth.x + radius * 0.3, earth.y + radius * 0.25, radius * 0.3, radius * 0.4, -0.4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        ctx.fillStyle = "#e2e8f0";
+        ctx.font = "700 12px -apple-system, BlinkMacSystemFont, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("EARTH", earth.x, earth.y + radius + 20);
+
+        ctx.fillStyle = "#64748b";
+        ctx.font = "500 10px -apple-system, BlinkMacSystemFont, sans-serif";
+        ctx.fillText("(Launch: 1977)", earth.x, earth.y + radius + 34);
+      }
+
+      function drawProximaCentauri(oneLightDayPos) {
+        const star = getProximaPos();
+
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(oneLightDayPos.x + 14, oneLightDayPos.y - 10);
+        ctx.lineTo(star.x - 28, star.y);
+        ctx.strokeStyle = "rgba(251, 146, 60, 0.25)";
+        ctx.lineWidth = 1.2;
+        ctx.setLineDash([2, 6]);
+        ctx.stroke();
+
+        const midX = (oneLightDayPos.x + 14 + star.x - 28) * 0.5;
+        const midY = (oneLightDayPos.y - 10 + star.y) * 0.5;
+        ctx.fillStyle = "#94a3b8";
+        ctx.font = "600 10px monospace";
+        ctx.textAlign = "center";
+        ctx.fillText("// 1,548 Light-Days //", midX, midY - 8);
+
+        const glow = ctx.createRadialGradient(star.x, star.y, 2, star.x, star.y, 38);
+        glow.addColorStop(0, "rgba(255, 237, 213, 0.95)");
+        glow.addColorStop(0.25, "rgba(251, 146, 60, 0.65)");
+        glow.addColorStop(0.6, "rgba(234, 88, 12, 0.2)");
+        glow.addColorStop(1, "rgba(234, 88, 12, 0)");
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, 38, 0, Math.PI * 2);
+        ctx.fillStyle = glow;
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, 7, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffedd5";
+        ctx.fill();
+
+        ctx.strokeStyle = "rgba(253, 186, 116, 0.6)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(star.x - 16, star.y);
+        ctx.lineTo(star.x + 16, star.y);
+        ctx.moveTo(star.x, star.y - 16);
+        ctx.lineTo(star.x, star.y + 16);
+        ctx.stroke();
+
+        ctx.fillStyle = "#fdba74";
+        ctx.font = "700 11.5px -apple-system, BlinkMacSystemFont, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("PROXIMA CENTAURI", star.x, star.y + 26);
+
+        ctx.fillStyle = "#94a3b8";
+        ctx.font = "500 10px -apple-system, BlinkMacSystemFont, sans-serif";
+        ctx.fillText("Nearest Star: 4.24 Light-Yrs", star.x, star.y + 40);
+        ctx.fillText("(~1,549 Light-Days)", star.x, star.y + 52);
+        ctx.restore();
+      }
+
+      function drawLightPulses(earth, voyager) {
+        const dx = voyager.x - earth.x;
+        const dy = voyager.y - earth.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 40) return;
+
+        const angle = Math.atan2(dy, dx);
+
+        for (let i = lightPulses.length - 1; i >= 0; i--) {
+          const pulse = lightPulses[i];
+          const px = earth.x + dx * pulse.progress;
+          const py = earth.y + dy * pulse.progress;
+
+          ctx.save();
+          ctx.translate(px, py);
+          ctx.rotate(angle);
+
+          const arcRadius = 15;
+          ctx.beginPath();
+          ctx.arc(-arcRadius * 0.5, 0, arcRadius, -0.55, 0.55);
+          ctx.strokeStyle = "rgba(56, 189, 248, 0.75)";
+          ctx.lineWidth = 2;
+          ctx.stroke();
+
+          ctx.beginPath();
+          ctx.arc(arcRadius * 0.5, 0, 2, 0, Math.PI * 2);
+          ctx.fillStyle = "#7dd3fc";
+          ctx.fill();
+
+          ctx.restore();
+        }
+      }
+
+      function drawVoyager(voyager, timeSec) {
+        ctx.save();
+        ctx.translate(voyager.x, voyager.y);
+
+        const pulseScale = 1 + Math.sin(timeSec * 4) * 0.12;
+        const beacon = ctx.createRadialGradient(0, 0, 2, 0, 0, 30 * pulseScale);
+        beacon.addColorStop(0, "rgba(250, 204, 21, 0.38)");
+        beacon.addColorStop(1, "rgba(250, 204, 21, 0)");
+        ctx.fillStyle = beacon;
+        ctx.beginPath();
+        ctx.arc(0, 0, 30 * pulseScale, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.rotate(-0.12);
+
+        ctx.strokeStyle = "#94a3b8";
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.moveTo(4, -3);
+        ctx.lineTo(26, -20);
+        ctx.stroke();
+
+        ctx.strokeStyle = "#cbd5e1";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(4, 3);
+        ctx.lineTo(22, 16);
+        ctx.stroke();
+        ctx.fillStyle = "#f97316";
+        ctx.fillRect(18, 13, 6, 4);
+
+        ctx.strokeStyle = "#94a3b8";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(2, -5);
+        ctx.lineTo(5, -22);
+        ctx.stroke();
+        ctx.fillStyle = "#38bdf8";
+        ctx.fillRect(2, -25, 6, 4);
+
+        ctx.fillStyle = "#334155";
+        ctx.strokeStyle = "#94a3b8";
+        ctx.lineWidth = 1.2;
+        ctx.fillRect(-4, -7, 10, 14);
+
+        ctx.fillStyle = "#eab308";
+        ctx.fillRect(-2, -5, 6, 10);
+
+        ctx.beginPath();
+        ctx.ellipse(-6, 0, 4.5, 15, 0, 0, Math.PI * 2);
+        ctx.fillStyle = "#f8fafc";
+        ctx.fill();
+        ctx.strokeStyle = "#64748b";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.strokeStyle = "#e2e8f0";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(-6, 0);
+        ctx.lineTo(-15, 0);
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(-15, 0, 2, 0, Math.PI * 2);
+        ctx.fillStyle = "#fde047";
+        ctx.fill();
+
+        ctx.restore();
+
+        ctx.save();
+        ctx.fillStyle = "#fde047";
+        ctx.font = "700 12px -apple-system, BlinkMacSystemFont, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText("VOYAGER 1", voyager.x, voyager.y - 34);
+
+        ctx.fillStyle = "#cbd5e1";
+        ctx.font = "500 10.5px monospace";
+        ctx.fillText("61,500 km/h (17 km/s)", voyager.x, voyager.y - 20);
+        ctx.restore();
+      }
+
+      function updateHUD() {
+        const currentYearFloat = START_YEAR + progress * TOTAL_YEARS;
+        const currentYear = Math.floor(currentYearFloat);
+        const yearsElapsed = (progress * TOTAL_YEARS).toFixed(1);
+        const kmBillions = (progress * MAX_KM_BILLIONS).toFixed(2);
+        const au = (progress * MAX_AU).toFixed(1);
+
+        const totalLightMinutes = Math.round(progress * MAX_LIGHT_HOURS * 60);
+        const hours = Math.floor(totalLightMinutes / 60);
+        const mins = totalLightMinutes % 60;
+        const formattedMins = mins < 10 ? `0${mins}` : mins;
+
+        const currentLightDays = progress * 1.0;
+        const pctOfProxima = (currentLightDays / PROXIMA_LIGHT_DAYS) * 100;
+        if (elCompareVoyagerLd) elCompareVoyagerLd.textContent = `${currentLightDays.toFixed(2)} Light-Days`;
+        if (elComparePct) elComparePct.textContent = `${pctOfProxima.toFixed(3)}% of Star Distance`;
+        if (elCompareFill) {
+          const visualWidthPct = Math.max(0.3, pctOfProxima * 22);
+          elCompareFill.style.width = `${visualWidthPct}%`;
+        }
+
+        elYear.textContent = currentYear;
+        elElapsed.textContent = `${yearsElapsed} Years in Space`;
+        elKm.textContent = `${kmBillions}B km`;
+        elAu.textContent = `${au} AU (Earth-Sun dist.)`;
+
+        if (progress >= 0.995) {
+          elYear.textContent = "Today (2026)";
+          elElapsed.textContent = "47+ Years (49.2 yrs total)";
+          elLight.textContent = "24h 00m (1 Light-Day)";
+          elLightSub.textContent = "48h Round-Trip Signal!";
+          elCardLight.classList.add("vp-highlight");
+        } else {
+          elLight.textContent = `${hours}h ${formattedMins}m`;
+          elLightSub.textContent = "Speed of Light: 299,792 km/s";
+          elCardLight.classList.remove("vp-highlight");
+        }
+
+        sliderTimeline.value = Math.round(progress * 1000);
+      }
+
+      function animate(timestamp) {
+        const rect = container.getBoundingClientRect();
+        if (rect.width < 2 || rect.height < 2) {
+          lastTimestamp = 0;
+          requestAnimationFrame(animate);
+          return;
+        }
+        if (Math.abs(rect.width - width) > 1 || Math.abs(rect.height - height) > 1) {
+          resizeCanvas();
+        }
+
+        if (!lastTimestamp) lastTimestamp = timestamp;
+        const dt = Math.min((timestamp - lastTimestamp) / 1000, 0.1);
+        lastTimestamp = timestamp;
+        const timeSec = timestamp / 1000;
+
+        if (isPlaying && progress < 1.0) {
+          progress += (dt / BASE_DURATION_SEC) * speedMultiplier;
+          if (progress >= 1.0) {
+            progress = 1.0;
+            isPlaying = false;
+            updatePlayButtonUI();
+          }
+        }
+
+        autoPulseTimer += dt;
+        if (autoPulseTimer > 2.4 && progress > 0.04) {
+          autoPulseTimer = 0;
+          fireLightPulse();
+        }
+
+        const pulseSpeed = Math.max(0.32, 0.85 - progress * 0.48);
+        for (let i = lightPulses.length - 1; i >= 0; i--) {
+          lightPulses[i].progress += dt * pulseSpeed;
+          if (lightPulses[i].progress >= 1.0) lightPulses.splice(i, 1);
+        }
+
+        ctx.clearRect(0, 0, width, height);
+
+        const earth = getEarthPos();
+        const voyager = getVoyagerPos(progress);
+
+        drawStars(timeSec);
+        drawTrajectoryAndMilestones(earth, voyager);
+        drawLightPulses(earth, voyager);
+        drawEarth(earth);
+        drawVoyager(voyager, timeSec);
+
+        updateHUD();
+        requestAnimationFrame(animate);
+      }
+
+      function updatePlayButtonUI() {
+        if (isPlaying) {
+          playIcon.innerHTML = "&#10074;&#10074;";
+          playText.textContent = "Pause";
+        } else {
+          playIcon.innerHTML = "&#9654;";
+          playText.textContent = progress >= 1.0 ? "Replay" : "Play";
+        }
+      }
+
+      btnPlay.addEventListener("click", () => {
+        if (progress >= 1.0) {
+          progress = 0.0;
+          isPlaying = true;
+        } else {
+          isPlaying = !isPlaying;
+        }
+        updatePlayButtonUI();
+      });
+
+      btnReplay.addEventListener("click", () => {
+        progress = 0.0;
+        lightPulses = [];
+        isPlaying = true;
+        updatePlayButtonUI();
+      });
+
+      btnSpeed.addEventListener("click", () => {
+        speedIndex = (speedIndex + 1) % SPEED_OPTIONS.length;
+        speedMultiplier = SPEED_OPTIONS[speedIndex];
+        btnSpeed.textContent = `Speed: ${speedMultiplier}x`;
+      });
+
+      sliderTimeline.addEventListener("input", (e) => {
+        progress = Number(e.target.value) / 1000;
+        updateHUD();
+      });
+
+      window.addEventListener("resize", resizeCanvas);
+
+      resizeCanvas();
+      updatePlayButtonUI();
+      requestAnimationFrame(animate);
+    })();
+  </script>
+</body>
+
+</html>
