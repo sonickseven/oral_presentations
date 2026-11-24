@@ -27,10 +27,11 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      # This step packages your files into the required "github-pages" artifact
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.'
+          path: '.'  # Uploads the root directory (where your index.html is)
 
       - name: Deploy to GitHub Pages
         id: deployment
